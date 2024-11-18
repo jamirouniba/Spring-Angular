@@ -15,49 +15,52 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.spring.Exception.ResourceNotFound;
 import com.spring.spring.Model.Employee;
-import com.spring.spring.Repository.EmployeeRepository;
+
+import com.spring.spring.service.EmployeeService;
 
 @RestController
 @RequestMapping("/api/v1/")
 @CrossOrigin(origins = "http://localhost:4200")
 public class EmployeeController {
-    
-    private final EmployeeRepository employeeRepository;
 
-    public EmployeeController(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    private final EmployeeService employeeService;
+
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
-    //Get all employees
+    // Get all employees
     @GetMapping("/employees")
-    public List<Employee> getAllEmployees(){return employeeRepository.findAll();}
-
-    //Create employee
-    @PostMapping("/employees/create")
-    public ResponseEntity<Employee> creatEmployee(@RequestBody Employee employee){
-        return ResponseEntity.ok(employeeRepository.save(employee));
+    public List<Employee> getAllEmployees() {
+        return employeeService.getAllEmployees();
     }
 
+    // Create employee
+    @PostMapping("/employees/create")
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+        return ResponseEntity.ok(employeeService.createEmployee(employee));
+    }
+
+    // Get employee by id
     @GetMapping("employees/{id}")
     public ResponseEntity<Optional<Employee>> getEmployee(@PathVariable Long id) {
-        return ResponseEntity.ok(employeeRepository.findById(id));
+        return ResponseEntity.ok(employeeService.getEmployee(id));
     }
 
+    // Update employee
     @PostMapping("employees/update/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id,@RequestBody Employee employee_details) {
-        Employee employee = employeeRepository.findById(id).orElseThrow(()-> new ResourceNotFound("No employee found with that id"));
-        employee.setFirstName(employee_details.getFirstName());
-        employee.setLastName(employee_details.getFirstName());
-        employee.setEmail(employee_details.getEmail());
-        
-        return ResponseEntity.ok(employeeRepository.save(employee));
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employeeDetails) {
+        Employee employee = employeeService.updateEmployee(id, employeeDetails);
+        if (employee == null) {
+            throw new ResourceNotFound("No employee found with that id");
+        }
+        return ResponseEntity.ok(employee);
     }
 
+    // Delete employee
     @DeleteMapping("employees/delete/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
-        employeeRepository.deleteById(id);
+        employeeService.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }
-
-
 }
