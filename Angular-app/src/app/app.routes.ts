@@ -7,6 +7,7 @@ import { PageNotFoundComponent } from './Pages/page-not-found/page-not-found.com
 import { CreateEmployeeComponent } from './employee/create-employee/create-employee.component';
 import { UpdateEmployeeComponent } from './employee/update-employee/update-employee.component';
 import { LoginComponent } from './Pages/login/login.component';
+import { SignupComponent } from './Pages/signup/signup.component';
 
 export const routes: Routes = [
 
@@ -14,6 +15,7 @@ export const routes: Routes = [
     { 'path' : 'about','title':'About', component:AboutComponent},
     { 'path' : 'contacts', 'title':'Contacts',component:ContactsComponent},
     { 'path' : 'login', 'title':'Login',component:LoginComponent},
+    { 'path' : 'signup', 'title':'SignUp',component:SignupComponent},
     { 'path' : 'employees', 'title':'Employees',component:EmployeeListComponent },
     { 'path' : 'employees/create', 'title':'Create Employee',component:CreateEmployeeComponent },
     { 'path' : 'employees/update/:id', 'title':'Update Employee',component:UpdateEmployeeComponent },

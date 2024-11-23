@@ -1,48 +1,51 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
-import { FormControl, FormGroup,FormsModule,ReactiveFormsModule } from '@angular/forms';
-import { LoginRequest } from '../../auth/models/login-request';
+import { FormBuilder, FormControl, FormGroup,FormsModule,ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { CommonModule } from '@angular/common';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule,CommonModule,FormsModule],
+  imports: [ReactiveFormsModule,CommonModule,FormsModule,RouterLinkActive,RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
 
-  constructor(private auth: AuthService){}
+  constructor(private service: AuthService,
+    private fb: FormBuilder,
+    private router: Router,
+){}
 
-  userForm : FormGroup = new FormGroup({
+  loginForm : FormGroup = new FormGroup({
     username: new FormControl(""),
     password: new FormControl(""),
   })
 
-  request : LoginRequest = new LoginRequest;
+  ngOnInit() {
+    this.loginForm = this.fb.group({
+      email: ['', Validators.required, Validators.email],
+      password: ['', Validators.required],
+    })
+  }
 
-  login(){
-    const formValue = this.userForm.value;
-    if (formValue.username == ""|| formValue.password == "" ){
-      alert("Wrong Credentials");
-      return;
-    }
-
-    this.request.username = formValue.username;
-    this.request.password = formValue.password;
-
-    this.auth.doLogin(this.request).subscribe({
-      next:(res) =>{
-        console.log("Received Response: "+ res.token);
-      },error:(err) =>{
-        console.log("Error Received: "+ err)
+  login() {
+    console.log(this.loginForm.value);
+    this.service.login(this.loginForm.value).subscribe((response) => {
+      console.log(response);
+      if (response.jwtToken) {
+        
+        const jwtToken = response.jwtToken;
+        localStorage.setItem('JWT', jwtToken);
+        this.router.navigate(['dashboard']);
       }
-    });
-
+    })
+  }
 
 
 
   }
 
-}
+

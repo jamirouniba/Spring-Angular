@@ -1,4 +1,12 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "cSpell.words": [
+        "jjwt",
+        "jsonwebtoken",
+        "projectlombok",
+        "springframework",
+        "vaadin"
+    ]
 }
